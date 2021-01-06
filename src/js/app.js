@@ -112,7 +112,7 @@ const listSearches = function (search) {
       <ul>
         <li class="name">${poi.text}</li>
         <li class="street-address">${poi.properties.address}</li>
-        <li class="distance">${poi.distance.toFixed(2)}KM</li>
+        <li class="distance">${poi.distance.toFixed(1)}KM</li>
       </ul>
     </li>`;
     })
