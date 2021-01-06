@@ -1,3 +1,9 @@
+/* The purpose of this javascript file is to handle the functionality
+ * of the map location based on the users location and their searches.
+ * Authors Abhijeet, Creston, and Maggie
+ */
+
+// CONST
 let longitude, latitude, marker, form, list, search, map;
 
 // API CALLS
@@ -37,7 +43,26 @@ const getPOI = function (search) {
     .catch((err) => `err: ${err}`);
 };
 
-//Code sourced from geodatasoruce.com
+// Retrieving map and initializing location marker
+const displayMap = function () {
+  mapboxgl.accessToken =
+    'pk.eyJ1IjoibWFnZ2llb3MiLCJhIjoiY2tqbGp5ZTV0NHE2MjJycDliM3ZjcWo5YSJ9.Mmc37_rqim4SCBRJX6Y_7Q';
+  map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [longitude, latitude],
+    zoom: 12,
+  });
+
+  marker = new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map);
+};
+
+getUserPosition().then(() => displayMap());
+
+// FUNCTIONS
+
+// Calculating the distance between two points.
+/* Code sourced from geodatasoruce.com */
 function getDistance(lat1, lon1, lat2, lon2, unit = `K`) {
   if (lat1 == lat2 && lon1 == lon2) {
     return 0;
@@ -65,6 +90,18 @@ function getDistance(lat1, lon1, lat2, lon2, unit = `K`) {
   }
 }
 
+// Removing and resetting the marker
+const recenter = function (poi) {
+  marker.remove();
+  map.flyTo({
+    center: [poi.dataset.long, poi.dataset.lat],
+  });
+  marker = new mapboxgl.Marker()
+    .setLngLat([poi.dataset.long, poi.dataset.lat])
+    .addTo(map);
+};
+
+// Creating html element
 const listSearches = function (search) {
   list.innerHTML = ``;
   getPOI(search).then((poiList) =>
@@ -82,21 +119,9 @@ const listSearches = function (search) {
   );
 };
 
-getUserPosition().then(() => displayMap());
+// EVENT LISTENERS
 
-const displayMap = function () {
-  mapboxgl.accessToken =
-    'pk.eyJ1IjoibWFnZ2llb3MiLCJhIjoiY2tqbGp5ZTV0NHE2MjJycDliM3ZjcWo5YSJ9.Mmc37_rqim4SCBRJX6Y_7Q';
-  map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v11',
-    center: [longitude, latitude],
-    zoom: 12,
-  });
-
-  marker = new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map);
-};
-
+// Listening for submit on search bar and creating response list
 window.addEventListener('DOMContentLoaded', (e) => {
   form = document.querySelector(`#search`);
   search = document.getElementsByTagName(`input`)[0];
@@ -105,18 +130,10 @@ window.addEventListener('DOMContentLoaded', (e) => {
   form.addEventListener(`submit`, (e) => {
     e.preventDefault();
     listSearches(search.value);
+    search.value = '';
   });
+  // Recentering marker upon click of li element
   list.addEventListener('click', (e) => {
     recenter(e.target.closest('.poi'));
   });
 });
-
-const recenter = function (poi) {
-  marker.remove();
-  map.flyTo({
-    center: [poi.dataset.long, poi.dataset.lat],
-  });
-  marker = new mapboxgl.Marker()
-    .setLngLat([poi.dataset.long, poi.dataset.lat])
-    .addTo(map);
-};
