@@ -17,6 +17,12 @@
   },
   "homepage": "https://github.com/maggiedalke/MittMaps-project#readme",
   "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-cleancss": "^0.2.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-concat-css": "^3.1.0",
+    "gulp-minify": "^3.1.0",
+    "gulp-sourcemaps": "^3.0.0",
     "mapbox-gl": "^2.0.1"
   }
 }

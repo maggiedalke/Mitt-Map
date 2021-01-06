@@ -1,10 +1,4 @@
-let longitude,
-  latitude,
-  marker,
-  form,
-  list,
-  search,
-  map;
+let longitude, latitude, marker, form, list, search, map;
 
 // API CALLS
 const getUserPosition = () => {
@@ -23,106 +17,106 @@ const getUserPosition = () => {
 };
 
 const getPOI = function (search) {
-  return fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${search}.json?types=poi&proximity=${longitude}%2c${latitude}&limit=10&access_token=pk.eyJ1IjoibWFnZ2llb3MiLCJhIjoiY2tqbGp5ZTV0NHE2MjJycDliM3ZjcWo5YSJ9.Mmc37_rqim4SCBRJX6Y_7Q`)
-    .then(response => response.json())
-    .then(data => data.features)
-    .then(data => {
-      data.forEach(poi => {
-        poi.distance = getDistance(latitude, longitude, poi.geometry.coordinates[1], poi.geometry.coordinates[0])
-      })
-      data.sort((a, b) => a.distance - b.distance)
-      return(data)
-  })
-  .catch(err => `err: ${err}`)
-}
+  return fetch(
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${search}.json?types=poi&proximity=${longitude}%2c${latitude}&limit=10&access_token=pk.eyJ1IjoibWFnZ2llb3MiLCJhIjoiY2tqbGp5ZTV0NHE2MjJycDliM3ZjcWo5YSJ9.Mmc37_rqim4SCBRJX6Y_7Q`
+  )
+    .then((response) => response.json())
+    .then((data) => data.features)
+    .then((data) => {
+      data.forEach((poi) => {
+        poi.distance = getDistance(
+          latitude,
+          longitude,
+          poi.geometry.coordinates[1],
+          poi.geometry.coordinates[0]
+        );
+      });
+      data.sort((a, b) => a.distance - b.distance);
+      return data;
+    })
+    .catch((err) => `err: ${err}`);
+};
 
 //Code sourced from geodatasoruce.com
 function getDistance(lat1, lon1, lat2, lon2, unit = `K`) {
-  if ((lat1 == lat2) && (lon1 == lon2)) {
+  if (lat1 == lat2 && lon1 == lon2) {
     return 0;
-  }
-  else {
-    var radlat1 = Math.PI * lat1 / 180;
-    var radlat2 = Math.PI * lat2 / 180;
+  } else {
+    var radlat1 = (Math.PI * lat1) / 180;
+    var radlat2 = (Math.PI * lat2) / 180;
     var theta = lon1 - lon2;
-    var radtheta = Math.PI * theta / 180;
-    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    var radtheta = (Math.PI * theta) / 180;
+    var dist =
+      Math.sin(radlat1) * Math.sin(radlat2) +
+      Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
     if (dist > 1) {
       dist = 1;
     }
     dist = Math.acos(dist);
-    dist = dist * 180 / Math.PI;
+    dist = (dist * 180) / Math.PI;
     dist = dist * 60 * 1.1515;
-    if (unit == "K") { dist = dist * 1.609344 }
-    if (unit == "N") { dist = dist * 0.8684 }
+    if (unit == 'K') {
+      dist = dist * 1.609344;
+    }
+    if (unit == 'N') {
+      dist = dist * 0.8684;
+    }
     return dist;
   }
 }
 
 const listSearches = function (search) {
   list.innerHTML = ``;
-  getPOI(search)
-  .then(poiList => poiList.forEach((poi) => {
-    list.innerHTML +=
-    `<li class="poi" data-long="${poi.geometry.coordinates[0]}"data-lat="${poi.geometry.coordinates[1]}">
+  getPOI(search).then((poiList) =>
+    poiList.forEach((poi) => {
+      list.innerHTML += `<li class="poi" data-long="${
+        poi.geometry.coordinates[0]
+      }"data-lat="${poi.geometry.coordinates[1]}">
       <ul>
         <li class="name">${poi.text}</li>
         <li class="street-address">${poi.properties.address}</li>
         <li class="distance">${poi.distance.toFixed(2)}KM</li>
       </ul>
-    </li>`
-  })
-  )
-}
+    </li>`;
+    })
+  );
+};
 
-getUserPosition()
-  .then(() => displayMap());
+getUserPosition().then(() => displayMap());
 
 const displayMap = function () {
   mapboxgl.accessToken =
     'pk.eyJ1IjoibWFnZ2llb3MiLCJhIjoiY2tqbGp5ZTV0NHE2MjJycDliM3ZjcWo5YSJ9.Mmc37_rqim4SCBRJX6Y_7Q';
-    map = new mapboxgl.Map({
+  map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
     center: [longitude, latitude],
     zoom: 12,
   });
 
-  marker = new mapboxgl.Marker()
-    .setLngLat([longitude, latitude])
-    .addTo(map);
-}
-
+  marker = new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map);
+};
 
 window.addEventListener('DOMContentLoaded', (e) => {
   form = document.querySelector(`#search`);
   search = document.getElementsByTagName(`input`)[0];
-  list = document.querySelector(`.points-of-interest`)
+  list = document.querySelector(`.points-of-interest`);
 
-  form.addEventListener(`submit`, e => {
+  form.addEventListener(`submit`, (e) => {
     e.preventDefault();
-    listSearches(search.value)
-  })
-  list.addEventListener('click', e => {
+    listSearches(search.value);
+  });
+  list.addEventListener('click', (e) => {
     recenter(e.target.closest('.poi'));
-
-  })
+  });
 });
 
-const recenter = function(poi) {
+const recenter = function (poi) {
   marker.remove();
   map.flyTo({
-    center: [poi.dataset.long, poi.dataset.lat]
+    center: [poi.dataset.long, poi.dataset.lat],
   });
   marker = new mapboxgl.Marker()
     .setLngLat([poi.dataset.long, poi.dataset.lat])
     .addTo(map);
-}
-
-// map.flyTo({
-//   center: [
-//   -74.5 + (Math.random() - 0.5) * 10,
-//   40 + (Math.random() - 0.5) * 10
-//   ],
-//   essential: true // this animation is considered essential with respect to prefers-reduced-motion
-//   });
+};
