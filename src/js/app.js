@@ -35,3 +35,4 @@ const displayMap = function () {
     .setLngLat([longitude, latitude])
     .addTo(map);
 }
+
