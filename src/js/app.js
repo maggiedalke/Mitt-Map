@@ -3,7 +3,8 @@ let longitude,
   marker,
   form,
   list,
-  search;
+  search,
+  map;
 
 // API CALLS
 const getUserPosition = () => {
@@ -62,7 +63,6 @@ const listSearches = function (search) {
   list.innerHTML = ``;
   getPOI(search)
   .then(poiList => poiList.forEach((poi) => {
-    console.log(poi)
     list.innerHTML +=
     `<li class="poi" data-long="${poi.geometry.coordinates[0]}"data-lat="${poi.geometry.coordinates[1]}">
       <ul>
@@ -81,7 +81,7 @@ getUserPosition()
 const displayMap = function () {
   mapboxgl.accessToken =
     'pk.eyJ1IjoibWFnZ2llb3MiLCJhIjoiY2tqbGp5ZTV0NHE2MjJycDliM3ZjcWo5YSJ9.Mmc37_rqim4SCBRJX6Y_7Q';
-  var map = new mapboxgl.Map({
+    map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
     center: [longitude, latitude],
@@ -103,4 +103,26 @@ window.addEventListener('DOMContentLoaded', (e) => {
     e.preventDefault();
     listSearches(search.value)
   })
+  list.addEventListener('click', e => {
+    recenter(e.target.closest('.poi'));
+
+  })
 });
+
+const recenter = function(poi) {
+  marker.remove();
+  map.flyTo({
+    center: [poi.dataset.long, poi.dataset.lat]
+  });
+  marker = new mapboxgl.Marker()
+    .setLngLat([poi.dataset.long, poi.dataset.lat])
+    .addTo(map);
+}
+
+// map.flyTo({
+//   center: [
+//   -74.5 + (Math.random() - 0.5) * 10,
+//   40 + (Math.random() - 0.5) * 10
+//   ],
+//   essential: true // this animation is considered essential with respect to prefers-reduced-motion
+//   });
