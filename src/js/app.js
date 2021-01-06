@@ -1,21 +1,27 @@
-// ApiKey pk.eyJ1IjoibWFnZ2llb3MiLCJhIjoiY2tqbGp5ZTV0NHE2MjJycDliM3ZjcWo5YSJ9.Mmc37_rqim4SCBRJX6Y_7Q
+let longitude,
+    latitude,
+    marker;
 
-// API CALL
-let longitude;
-let latitude;
-
+    // API CALL
 const getUserPosition = () => {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition((position) => {
-      longitude = position.coords.longitude;
-      latitude = position.coords.latitude;
+      if (position != undefined) {
+        longitude = position.coords.longitude;
+        latitude = position.coords.latitude;
 
-      resolve('completed');
+        resolve('completed');
+      } else {
+        reject('could not get position');
+      }
     });
   });
 };
 
-getUserPosition().then((response) => {
+getUserPosition()
+  .then(() => displayMap());
+
+const displayMap = function () {
   mapboxgl.accessToken =
     'pk.eyJ1IjoibWFnZ2llb3MiLCJhIjoiY2tqbGp5ZTV0NHE2MjJycDliM3ZjcWo5YSJ9.Mmc37_rqim4SCBRJX6Y_7Q';
   var map = new mapboxgl.Map({
@@ -25,7 +31,7 @@ getUserPosition().then((response) => {
     zoom: 12,
   });
 
-  let marker = new mapboxgl.Marker()
+    marker = new mapboxgl.Marker()
     .setLngLat([longitude, latitude])
     .addTo(map);
-});
+}
