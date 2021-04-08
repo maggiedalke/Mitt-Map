@@ -1,23 +1,17 @@
 # Mitt-Maps
 **Hosted:** https://cam-mittmap.netlify.app/
 
-For this group project, you will build a small Maps style app that will allow users to search for points of interest that are close to their current location. Look at this working demo to see the functionality you will develop for this project. Search for 'coffee' or 'gas' or 'park' to see how it works.
+This was a group proget where we had to build a small Maps style app, for Winnipeg, MB Area, that will allows users to search for points of interest that are close to their current location. 
 
-## Set-up
-To get started:
+## Development Process
 
-- Register for a free API account at MapBox.com
-- Download the starter HTML and CSS
-- Create a new PRIVATE repository and add your group members as collaborators.
+### Set-up
 
-## Instructions
-To complete this task you will use a variety of tools, APIs, and libraries. Take the time to research and discuss each tool as a group. Be sure to ask questions if you're not clear on the how or why of each tool.
+- Register for a free API account at MapBox.com and downloaded the starter HTML and CSS.
 
-The project has been broken down into three phases. Working in groups of three, develop each phase consecutively. A different team member should be responsible for typing, recording, and committing each phase in turn.
+**Breaking the project into Three phases, we worked on each developing a seperate phase of the project.**
 
-Once the project is complete, deploy your solution to a publicly accessible host. Post the URL in the "Group Project Posts" channel on Teams along with the names of your team members and the videos of your coding sessions.
-
-### Phase 1
+### Phase 1 - Maggie
 Get current location, draw a map, center the map on this location and drop a marker.
 
 To complete this phase:
@@ -26,7 +20,7 @@ To complete this phase:
 - Import the Mapbox GL JS JavaScript library, and it's associated JS file, as shown in the quickstart guide and the the example of displaying a simple map.
 - Drop a marker indicating the users current location.
 
-### Phase 2
+### Phase 2  - Creston
 Using users location, perform a forward geocode for points of interest, determine the distance to each and display them
 
 To complete this phase:
@@ -35,13 +29,12 @@ To complete this phase:
 - Figure out how to calculate the distance between 2 sets of coordinates. Google can help you with this one.
 - Sort the points of interest returned by the forward geocoding based on distance to the user, in ascending order.
 - Output the list to the page.
-- Phase 3
+
+### Phase 3 - Abhijeet
 - Users can click on a point of interest, and the map will adjust to drop a new marker and recenter on that point of interest
 
 To complete this phase:
--Add an event listener to your points-of-interest list
--Remove the existing marker, drop a new marker and recenter the map
-
-**ther requirements**
+- Add an event listener to your points-of-interest list
+- Remove the existing marker, drop a new marker and recenter the map
 - You should only retrieve poi or points of interest from your forward geocode.
 - You should retrieve the maximum results possible (10) from your forward geocode.
