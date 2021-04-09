@@ -38,3 +38,7 @@ To complete this phase:
 - Remove the existing marker, drop a new marker and recenter the map
 - You should only retrieve poi or points of interest from your forward geocode.
 - You should retrieve the maximum results possible (10) from your forward geocode.
+
+## How to Use
+Enter a destination on the map in the search bar at the top left of the app. As an example, *"Sushi".*
+The app will locate the ten closest sushi restaurants to you and display them in order of proximity.
